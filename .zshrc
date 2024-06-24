@@ -1,32 +1,36 @@
+# sourcing common setup file
+source $HOME/.commonrc
+
+# prepare agent when sshing
 eval $(gpg-agent --daemon)
 export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 
-export PATH="/Users/work/.local/bin:$PATH"
-export LD_LIBRARY_PATH="/Users/work/.local/lib:$LD_LIBRARY_PATH"
-
+# remove mouse accel
 defaults write .GlobalPreferences com.apple.mouse.scaling -1 
 source <(fzf --zsh)
 
-USER="work"; export USER
-
 autoload -U colors && colors
-PS1='%F{green}%n%f:%F{blue}%~%f$ '
-alias ls='ls --color=auto'
-#export LS_COLORS="di=1;34:fi=0:*.txt=1;31:*.pdf=1;31"
 
-alias ll="ls -halF"
+# aliases for MacFuse with baigroup server
 alias baifuse="sshfs baigroup:. ~/sshfs"
 alias baiunfuse="diskutil unmount force ~/sshfs"
-alias packmol="~/Documents/packmol/packmol"
-alias bai='rm mux* ; ssh baigroup'
-alias vim=nvim
+
+# dns flush 
 alias dnsflush='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 
+# color prompt in terminal
+PS1='%F{green}%n%f:%F{blue}%~%f$ '
+
+# init zoxide
 eval "$(zoxide init zsh --cmd cd)"
- 
-alias config='/usr/bin/git --git-dir=/Users/work/.cfg/ --work-tree=/Users/work'
+
+# init fzf
+source <(fzf --zsh)
+
+# brew stuff
 eval "$(/usr/local/bin/brew shellenv)"
  
+# ssh rebind to change tmux name when sshing
 ssh() {
   tmux rename-window "$*"
   command ssh "$@" -X
