@@ -25,9 +25,9 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # some ls aliases
-alias ll='ls -halF'
-alias la='ls -A'
-alias l='ls -CF'
+alias ll='ls -halF --color=auto'
+alias la='ls -A --color=auto'
+alias l='ls -CF --color=auto'
 
 # easy sshing into bai group server
 alias bai='ssh -X baigroup'
