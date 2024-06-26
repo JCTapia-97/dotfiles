@@ -35,7 +35,7 @@ alias la='ls -A --color=auto'
 alias l='ls -CF --color=auto'
 
 # easy sshing into bai group server
-alias bai='ssh -X baigroup'
+alias bai='ssh baigroup'
  
 # add .local files to PATH
 export PATH="$HOME/.local/bin:$PATH"
@@ -52,4 +52,16 @@ alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 # set title command for renaming tmux panes
 settitle() {
     printf "\033k$1\033\\"
+}
+
+# ssh rebind to change tmux name when sshing
+ssh() {
+  local tmux_window_name="$*"
+  local cmd="$1"
+  local shell_type=$(echo "$SHELL" | awk -F '/' '{print $NF}')
+
+  shift
+  tmux rename-window "$tmux_window_name"
+  command ssh "$cmd" "$@"
+  tmux rename-window $shell_type
 }

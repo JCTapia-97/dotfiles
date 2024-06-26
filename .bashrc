@@ -134,10 +134,3 @@ if [[ $(grep -i Microsoft /proc/version) ]]; then
     # alias to be similar to MacOS
     alias open='explorer.exe'
 fi
-
-# ssh rebind to change tmux name when sshing
-ssh() {
-    settitle "$*"
-    command ssh -X "$@"
-    settitle "bash"
-}

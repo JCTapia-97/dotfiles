@@ -34,10 +34,3 @@ eval "$(/usr/local/bin/brew shellenv)"
 LS_COLORS='no=00;37:fi=00:di=00;33:ln=04;36:pi=40;33:so=01;35:bd=40;33;01:'
 export LS_COLORS
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-
-# ssh rebind to change tmux name when sshing
-ssh() {
-  tmux rename-window "$*"
-  command ssh "$@" -X
-  tmux rename-window "zsh"
-}
