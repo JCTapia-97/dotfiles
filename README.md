@@ -37,3 +37,8 @@ github to see the major differences between the baseline setup and my setup.
 - Autofill options can be selected with `J` and `K`.
 - Autofill is selected with `<Tab>`.
 - Reverse indenting can be done with `S-<Tab>`.
+
+
+## To-do/wants
+- Currently, smart vim/tmux pane switcher doesn't work while ssh'd onto a remote server. Need to fix. Currently using regular 
+window switching in vim while on remote servers.
