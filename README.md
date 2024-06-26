@@ -1,7 +1,7 @@
-# Dotfile Management
-Management for my configs for nvim and tmux
+# Config Management
+Management for my configs for nvim and tmux. This should work for both MacOS and WSL but is untested in an actual linux environment.
 
-## Programs
+## Requirements
 - [nvim](https://github.com/neovim/neovim/blob/master/INSTALL.md) (v. 0.9.4 or greater): A modern version of vim that allows for
 scripting through lua. I've used Kickstart as a baseline with some changes, but might start over from fresh.
 - [ripgrep](https://github.com/BurntSushi/ripgrep): Necessary for Kickstart with nvim.
@@ -10,12 +10,15 @@ use it for its reverse search functionality.
 - [zoxide](https://github.com/ajeetdsouza/zoxide): A program which remembers commonly used directories and
 allows you to jump between them without using the full path.
 - [tmux](https://github.com/tmux/tmux/wiki): A terminal multiplexer.
+- Some nerd font. On Macs, I've been using iTerm and use the built-in Powerline glyphs. For WSL, I've been using Cascadia Code PL which has some minor issues discussed below
 
-## Changes
+## Major Changes to Stock Experience
 Not all changes are described, just what I consider the biggest ones. If you want a comprehensive list of
 changes, check the respective program's config file.
 
 ### Tmux
+- Started automatically on terminal launch.
+- Sessions are saved even after restarts.
 - Prefix key changed to `C-space`.
 - Vim style movement so `H`, `I`, `K`, `L` moves pane in the respective direction.
 - 'C-v' splits window into pane in the same way `:vsp` does in vim.
@@ -40,5 +43,6 @@ github to see the major differences between the baseline setup and my setup.
 
 
 ## To-do/wants
-- Currently, smart vim/tmux pane switcher doesn't work while ssh'd onto a remote server. Need to fix. Currently using regular 
-window switching in vim while on remote servers.
+- Currently, smart vim/tmux pane switcher doesn't work while ssh'd onto a remote server. Based on the documentation, this may not be fixable. Currently using regular 
+window switching in vim while on remote servers. 
+- When using Cascadia Code PL, colors on the PL don't work as well as on iTerm. This needs some fiddling to get it to work.
