@@ -129,6 +129,12 @@ if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
   unset wsl2_ssh_pageant_bin
 fi
 
+# checks if it's in WSL or not
+if [[ $(grep -i Microsoft /proc/version) ]]; then
+    # alias to be similar to MacOS
+    alias open='explorer.exe'
+fi
+
 # ssh rebind to change tmux name when sshing
 ssh() {
     settitle "$*"
