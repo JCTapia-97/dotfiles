@@ -39,7 +39,7 @@ alias bai='ssh baigroup'
  
 # add .local files to PATH
 export PATH="$HOME/.local/bin:$PATH"
-export LD_LIBRARY_PATH="$HOME/.local/bin:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="$HOME/.local/lib:$LD_LIBRARY_PATH"
 
 # aliases for nvim, fzf, and python
 alias vim=nvim
@@ -56,12 +56,12 @@ settitle() {
 
 # ssh rebind to change tmux name when sshing
 ssh() {
-  local tmux_window_name="$*"
-  local cmd="$1"
-  local shell_type=$(echo "$SHELL" | awk -F '/' '{print $NF}')
-
-  shift
-  tmux rename-window "$tmux_window_name"
-  command ssh "$cmd" "$@"
-  tmux rename-window $shell_type
+    local tmux_window_name="$*"
+    local cmd="$1"
+    local shell_type=$(echo "$SHELL" | awk -F '/' '{print $NF}')
+    
+    shift
+    tmux rename-window "$tmux_window_name"
+    command ssh "$cmd" "$@"
+    tmux rename-window $shell_type
 }

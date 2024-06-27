@@ -40,8 +40,16 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+if [[ -f ~/.bash_aliases ]]; then
+    source ~/.bash_aliases
+fi
+
+if [[ -f ~/.bash_modules ]]; then
+    source ~/.bash_modules
+fi
+
+if [[ -x "$(command -v conda)" ]]; then
+    source ~/.condarc
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
@@ -89,8 +97,6 @@ fi
 
 # sets some variables for X11 forwarding
 export NO_AT_BRIDGE=1
-export DISPLAY=$(route.exe print | grep 0.0.0.0 | head -1 | awk '{print $4}'):0.0
-export LIBGL_ALWAYS_INDIRECT=1
 
 eval "$(ssh-agent -s)"
 
@@ -100,37 +106,25 @@ eval "$(zoxide init bash --cmd cd)"
 # init fzf
 eval "$(fzf --bash)"
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('$HOME/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="$HOME/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-conda deactivate
-# <<< conda initialize <<<
-
-# WSL2 ssh set-up for pageant
-export SSH_AUTH_SOCK="/tmp/.ssh-pageant-$USER"
-if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
-  rm -f "$SSH_AUTH_SOCK"
-  wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
-  if test -x "$wsl2_ssh_pageant_bin"; then
-    (setsid nohup socat UNIX-LISTEN:"$SSH_AUTH_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin" >/dev/null 2>&1 &)
-  else
-    echo >&2 "WARNING: $wsl2_ssh_pageant_bin is not executable."
-  fi
-  unset wsl2_ssh_pageant_bin
-fi
-
 # checks if it's in WSL or not
 if [[ $(grep -i Microsoft /proc/version) ]]; then
     # alias to be similar to MacOS
     alias open='explorer.exe'
+
+    # WSL2 ssh set-up for pageant
+    export SSH_AUTH_SOCK="/tmp/.ssh-pageant-$USER"
+    if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
+      rm -f "$SSH_AUTH_SOCK"
+      wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
+      if test -x "$wsl2_ssh_pageant_bin"; then
+        (setsid nohup socat UNIX-LISTEN:"$SSH_AUTH_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin" >/dev/null 2>&1 &)
+      else
+        echo >&2 "WARNING: $wsl2_ssh_pageant_bin is not executable."
+      fi
+      unset wsl2_ssh_pageant_bin
+    fi
+
+    # X11 forwarding rendering for WSL2
+    export DISPLAY=$(route.exe print | grep 0.0.0.0 | head -1 | awk '{print $4}'):0.0
+    export LIBGL_ALWAYS_INDIRECT=1
 fi

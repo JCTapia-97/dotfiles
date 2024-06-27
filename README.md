@@ -1,5 +1,5 @@
 # Config Management
-Management for my configs for nvim and tmux. This should work for both MacOS and WSL but is untested in an actual linux environment.
+Management for my configs for nvim and tmux. This should work for MacOS 12.4 (my laptop), WSL (my desktop), and Ubuntu 22.04 (the group server).
 
 ## Requirements
 - [nvim](https://github.com/neovim/neovim/blob/master/INSTALL.md) (v. 0.9.4 or greater): A modern version of vim that allows for
@@ -42,7 +42,7 @@ github to see the major differences between the baseline setup and my setup.
 - Reverse indenting can be done with `S-<Tab>`.
 
 
-## To-do/wants
+## To-do/To-add/Issues
 - Currently, smart vim/tmux pane switcher doesn't work while ssh'd onto a remote server. Based on the documentation, this may not be fixable. Currently using regular 
 window switching in vim while on remote servers. 
 - When using Cascadia Code PL, colors on the PL don't work as well as on iTerm. This needs some fiddling to get it to work.
