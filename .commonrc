@@ -49,19 +49,22 @@ alias fzim='vim $(fzf --height 40%)'
 # dotfile management alias
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
-# set title command for renaming tmux panes
-settitle() {
-    printf "\033k$1\033\\"
+# set some commands that are only necessary in a tmux session
+if [[ -n "$TMUX" ]]; then 
+    # ssh rebind to change tmux name when sshing
+    ssh() {
+        local tmux_window_name="$*"
+        local cmd="$1"
+        local shell_type=$(echo "$SHELL" | awk -F '/' '{print $NF}')
+        
+        shift
+        tmux rename-window "$tmux_window_name"
+        command ssh "$cmd" "$@"
+        tmux rename-window $shell_type
+    }
+     
+    # set title command for renaming tmux panes
+    settitle() {
+        printf "\033k$1\033\\"
 }
-
-# ssh rebind to change tmux name when sshing
-ssh() {
-    local tmux_window_name="$*"
-    local cmd="$1"
-    local shell_type=$(echo "$SHELL" | awk -F '/' '{print $NF}')
-    
-    shift
-    tmux rename-window "$tmux_window_name"
-    command ssh "$cmd" "$@"
-    tmux rename-window $shell_type
-}
+fi
