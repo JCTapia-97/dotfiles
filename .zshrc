@@ -1,3 +1,8 @@
+# Don't do anything if not an interactive session
+if [[ ! -o interactive ]]; then
+	return
+fi
+
 # sourcing common setup file
 source $HOME/.commonrc
 

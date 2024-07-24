@@ -1,3 +1,9 @@
+# Don't do anything if not an interactive session
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
@@ -48,8 +54,8 @@ if [[ -f ~/.bash_modules ]]; then
     source ~/.bash_modules
 fi
 
-if [[ -x "$(command -v conda)" ]]; then
-    source ~/.condarc
+if [[ -f ~/.condainitrc ]]; then
+    source ~/.condainitrc
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
