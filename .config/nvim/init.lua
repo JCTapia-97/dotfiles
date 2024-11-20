@@ -138,8 +138,8 @@ end)
 vim.opt.breakindent = true
 
 -- Save undo history
-vim.opt.undofile = true
-vim.opt.undofile = true
+vim.o.undofile = true
+vim.o.undodir = os.getenv("HOME") .. "/.nvim/undodir"
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.ignorecase = true
@@ -990,6 +990,33 @@ require("lazy").setup({
 		--    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 	},
 
+	-- custom plugins
+	{
+		"christoomey/vim-tmux-navigator",
+		cmd = {
+			"TmuxNavigateLeft",
+			"TmuxNavigateDown",
+			"TmuxNavigateUp",
+			"TmuxNavigateRight",
+			"TmuxNavigatePrevious",
+		},
+		keys = {
+			{ "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
+			{ "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
+			{ "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
+			{ "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
+			{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+		},
+	},
+	{
+		"mbbill/undotree",
+	},
+	{
+		"tpope/vim-rhubarb",
+	},
+	{
+		"tpope/vim-fugitive",
+	},
 	-- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
 	-- init.lua. If you want these files, they are in the repository, so you can just download them and
 	-- place them in the correct locations.
@@ -1002,9 +1029,9 @@ require("lazy").setup({
 	-- require 'kickstart.plugins.debug',
 	-- require 'kickstart.plugins.indent_line',
 	-- require 'kickstart.plugins.lint',
-	-- require 'kickstart.plugins.autopairs',
+	require("kickstart.plugins.autopairs"),
 	-- require 'kickstart.plugins.neo-tree',
-	-- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+	require("kickstart.plugins.gitsigns"), -- adds gitsigns recommend keymaps
 
 	-- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
 	--    This is the easiest way to modularize your config.
@@ -1036,51 +1063,7 @@ require("lazy").setup({
 			lazy = "💤 ",
 		},
 	},
-	-- Custom Plugins section !!
-	{
-		"mbbill/undotree",
-		{
-			"windwp/nvim-autopairs",
-			event = "InsertEnter",
-			opts = {},
-		},
-	},
-	{
-
-		"christoomey/vim-tmux-navigator",
-		cmd = {
-			"TmuxNavigateLeft",
-			"TmuxNavigateDown",
-			"TmuxNavigateUp",
-			"TmuxNavigateRight",
-			"TmuxNavigatePrevious",
-		},
-		keys = {
-			{ "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
-			{ "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
-			{ "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
-			{ "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
-			{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
-		},
-	},
-	{
-		"tpope/vim-fugitive",
-	},
-	{
-		"tpope/vim-rhubarb",
-	},
-	{
-		"tpope/vim-sleuth",
-	},
-	{
-		"windwp/nvim-autopairs",
-		event = "InsertEnter",
-		config = true,
-		opts = {},
-	},
-	{},
 })
-
 -- Custom functions added by ME!!
 
 function AddNewLineBelow()
@@ -1108,5 +1091,37 @@ end
 -- Adds new line like respective vim commands but does not enter insert mode
 vim.api.nvim_set_keymap("n", "<leader>o", ":lua AddNewLineBelow()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<leader>O", ":lua AddNewLineHere()<CR>", { noremap = true, silent = true })
+
+local cmp = require("cmp")
+local luasnip = require("luasnip")
+require("luasnip.loaders.from_vscode").lazy_load()
+luasnip.config.setup({})
+
+cmp.setup({
+	snippet = {
+		expand = function(args)
+			luasnip.lsp_expand(args.body)
+		end,
+	},
+	completion = {
+		completeopt = "menu,menuone,noinsert",
+	},
+	mapping = cmp.mapping.preset.insert({
+		["<S-j>"] = cmp.mapping.select_next_item(),
+		["<S-k>"] = cmp.mapping.select_prev_item(),
+		["<C-d>"] = cmp.mapping.scroll_docs(-4),
+		["<C-f>"] = cmp.mapping.scroll_docs(4),
+		["<S-Enter>"] = cmp.mapping.complete({}),
+		["<Tab>"] = cmp.mapping.confirm({
+			behavior = cmp.ConfirmBehavior.Replace,
+			select = true,
+		}),
+		["<S-Tab>"] = nil,
+	}),
+	sources = {
+		{ name = "nvim_lsp" },
+		{ name = "luasnip" },
+	},
+})
 --- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
